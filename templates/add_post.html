@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	{{ super() }}
+	{% for cat, msg in get_flashed_messages(True) %}
+	<div>{{ cat }} : {{msg}}</div>
+	{% endfor %}
+	<form action="/add-post" method="post" class="form-contact">
+
+		<select name="cat">
+			<option value="0">Категория не выбрана</option>
+		{% for cat in categories %}
+			<option value="{{ cat.id }}">{{ cat.title }}</option>
+		{% endfor %}
+		</select>
+
+		{{ form.hidden_tag() }}
+	    <p>{{ form.title.label() }} {{ form.title() }}</p>
+		<p>{{ form.ref.label() }} {{ form.ref() }}</p>
+		<p>{{ form.text.label() }} {{ form.text() }}</p>
+		<p>{{ form.submit() }}</p>
+
+	</form>
+{% endblock %}

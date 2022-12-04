@@ -1,0 +1,10 @@
+{% extends 'category.html' %}
+
+{% block content %}
+    {% for post in posts %}
+        {% if post.ref == current_post %}
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.text }}</p>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
