@@ -1,8 +1,10 @@
-from datetime import datetime
+"""
+Формы для создания постов, категорий и авторизации.
+"""
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms.validators import Length
 
 
 class CategoryForm(FlaskForm):
@@ -23,6 +25,6 @@ class PostForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Login: ')
+    name = StringField('Login: ')
     psw = PasswordField('Password: ')
     submit = SubmitField('Войти')

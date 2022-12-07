@@ -11,10 +11,14 @@
     <div class="content">
       <div id="menu">
         <ul>
-          <li><a class="current" href="{{ url_for('category') }}"><span>HOME</span></a></li>
+          {% if session['admin_logged'] == 1 %}
+          <li><a class="current" href="{{ url_for('admin.index') }}"><span>ADMIN</span></a></li>
           <li><a href="{{ url_for('add_category') }}"><span>ADD CATEGORY</span></a></li>
           <li><a href="{{ url_for('add_post') }}"><span>ADD POST</span></a></li>
-          <li><a href="#"><span>SIGN IN</span></a></li>
+          <li><a href="{{ url_for('admin.logout') }}"><span>SIGN OUT</span></a></li>
+          {% else %}
+          <li><a href="{{ url_for('admin.login') }}"><span>SIGN IN</span></a></li>
+          {% endif %}
         </ul>
       </div>
       <h1><a href="{{ url_for('category') }}">MS Development</a></h1>
@@ -31,21 +35,9 @@
             {% for cat in categories %}
               <li><a href="{{ url_for('category') + cat.ref }}"><span>{{ cat.title }}</span></a></li>
             {% endfor %}
-<!--            <li><a class="current" href="#">Home</a></li>-->
-<!--            <li><a href="#">Python</a></li>-->
-<!--            <li><a href="#">Django</a></li>-->
-<!--            <li><a href="#">SQL</a></li>-->
-<!--            <li><a href="#">Re</a></li>-->
           </ul>
           {% block subcategory %}
           {% endblock %}
-<!--          <h3>Subcategories:</h3>-->
-<!--          <ul>-->
-<!--            <li><a class="current" href="#">Home</a></li>-->
-<!--            <li><a href="#">Типы данных</a></li>-->
-<!--            <li><a href="#">ООП</a></li>-->
-<!--            <li><a href="#">pip</a></li>-->
-<!--          </ul>-->
         </div>
       </div>
       <div id="right_side">

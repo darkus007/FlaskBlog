@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	{{ super() }}
+	{% for cat, msg in get_flashed_messages(True) %}
+	<div>{{ cat }} : {{msg}}</div>
+	{% endfor %}
+	{% for cat in categories %}
+		<h3>{{ cat.title }} ---- <a href="{{ url_for('.del_category', category=cat.ref )}}">Удалить</a></h3>
+		<ul>
+		{% for post in posts %}
+			{% if post.category_id == cat.id %}
+				<li>{{ post.title }} ---- <a href="{{ url_for('.del_post', post=post.ref )}}">Удалить</a></li>
+			{% endif %}
+		{% endfor %}
+		</ul>
+	{% endfor %}
+{% endblock %}

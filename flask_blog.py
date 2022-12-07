@@ -3,52 +3,29 @@
 """
 import sqlite3
 from os import getenv
-from datetime import datetime
 
 from flask import Flask, render_template, url_for, request, flash, redirect
-from flask_sqlalchemy import SQLAlchemy
+import markdown
 
-from wt_forms import CategoryForm, PostForm
+from utils.wt_forms import CategoryForm, PostForm
+from utils.sqlacchemy_models import db, Categories, Posts
+from admin.admin import admin
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False       # если есть ошибка в консоли
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# app.register_blueprint(category, url_prefix='/')
+db.init_app(app)
 
-db = SQLAlchemy(app)    # подключаем базу данных к нашему приложению
-
-
-class Categories(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(25), unique=True)
-    ref = db.Column(db.String(25), unique=True)
-
-    def __repr__(self):
-        return self.title
-
-
-class Posts(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(25), nullable=True)
-    ref = db.Column(db.String(25), nullable=True)
-    text = db.Column(db.Text)
-    date = db.Column(db.DateTime, default=datetime.utcnow())
-
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-
-    category = db.relationship('Categories',
-                               backref=db.backref('posts', lazy='dynamic'))
-
-    def __repr__(self):
-        return self.title
+app.register_blueprint(admin, url_prefix='/admin')
 
 
 # @app.route('/')
 # def index():
-#     categories = Categories.query.all()
-#     return render_template('base.html', categories=categories)
+    # categories = Categories.query.all()
+    # return render_template('base.html', categories=categories)
 
 
 @app.route('/add-category', methods=['POST', 'GET'])
@@ -73,7 +50,7 @@ def add_post():
         cat = Categories.query.get(int(request.form['cat']))
         post = Posts(title=form.title.data,
                      ref=form.ref.data,
-                     text=form.text.data,
+                     text=markdown.markdown(form.text.data),
                      category_id=int(request.form['cat']))
         try:
             db.session.add(post)
@@ -99,7 +76,6 @@ def category(category=None):
 @app.route('/<path:category>/<path:post>')
 def post(category, post):
     cat = Categories.query.filter_by(ref=category).first()
-    # posts = Posts.query.filter_by(category_id=cat.id, ref=post).first()
     posts = Posts.query.filter_by(category_id=cat.id).all()
     return render_template('post.html', posts=posts, current_post=post, cat=cat, categories=Categories.query.all())
 
