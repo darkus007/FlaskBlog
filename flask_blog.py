@@ -10,6 +10,7 @@ import markdown
 from utils.wt_forms import CategoryForm, PostForm
 from utils.sqlacchemy_models import db, Categories, Posts
 from admin.admin import admin
+from api.api import api_bp, api
 
 
 app = Flask(__name__)
@@ -18,8 +19,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+api.init_app(app)
 
 app.register_blueprint(admin, url_prefix='/admin')
+app.register_blueprint(api_bp, url_prefix='/api')
 
 
 # @app.route('/')
@@ -36,10 +39,10 @@ def add_category():
         try:
             db.session.add(category)
             db.session.commit()
-            return redirect(url_for('category'))
+            return redirect(url_for('get_category'))
         except sqlite3.Error:
             db.session.rollback()  # откатываем все изменения
-            flash('Ошибка записи в базу данных', 'error')
+            flash('Ошибка записи в базу данных', 'Error')
     return render_template('add_category.html', form=form, categories=Categories.query.all())
 
 
@@ -56,16 +59,16 @@ def add_post():
             db.session.add(post)
             db.session.commit()
             print(f'{cat.ref=} \t {post.ref=}')
-            return redirect(url_for('post', category=cat.ref, post=post.ref))
+            return redirect(url_for('get_post', category=cat.ref, post=post.ref))
         except sqlite3.Error:
             db.session.rollback()  # откатываем все изменения
-            flash('Ошибка записи в базу данных', 'error')
+            flash('Ошибка записи в базу данных', 'Error')
     return render_template('add_post.html', form=form, categories=Categories.query.all())
 
 
 @app.route('/')
 @app.route('/<path:category>')
-def category(category=None):
+def get_category(category=None):
     cat = Categories.query.filter_by(ref=category).first()
     if cat is None:
         cat = Categories.query.get(1)
@@ -74,7 +77,7 @@ def category(category=None):
 
 
 @app.route('/<path:category>/<path:post>')
-def post(category, post):
+def get_post(category, post):
     cat = Categories.query.filter_by(ref=category).first()
     posts = Posts.query.filter_by(category_id=cat.id).all()
     return render_template('post.html', posts=posts, current_post=post, cat=cat, categories=Categories.query.all())

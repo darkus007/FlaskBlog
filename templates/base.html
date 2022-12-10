@@ -21,7 +21,7 @@
           {% endif %}
         </ul>
       </div>
-      <h1><a href="{{ url_for('category') }}">MS Development</a></h1>
+      <h1><a href="{{ url_for('get_category') }}">MS Development</a></h1>
       <h2>Блог о web-разработке на Python</h2>
     </div>
   </div>
@@ -33,7 +33,7 @@
           <h3>Categories:</h3>
           <ul>
             {% for cat in categories %}
-              <li><a href="{{ url_for('category') + cat.ref }}"><span>{{ cat.title }}</span></a></li>
+              <li><a href="{{ url_for('get_category') + cat.ref }}"><span>{{ cat.title }}</span></a></li>
             {% endfor %}
           </ul>
           {% block subcategory %}

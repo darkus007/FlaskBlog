@@ -56,7 +56,7 @@ def login():
             login_admin()
             return redirect(url_for('.index'))  # так указываем index из текущего модуля, без точки будет из приложения
         else:
-            flash('Неправильный логин или пароль', 'error')
+            flash('Неправильный логин или пароль', 'Error')
     return render_template('admin/login.html', form=form, categories=Categories.query.all())
 
 
@@ -79,7 +79,7 @@ def add_category():
             return redirect(url_for('category'))
         except sqlite3.Error:
             db.session.rollback()  # откатываем все изменения
-            flash('Ошибка записи в базу данных', 'error')
+            flash('Ошибка записи в базу данных', 'Error')
     return render_template('add_category.html', form=form, categories=Categories.query.all())
 
 
@@ -99,7 +99,7 @@ def add_post():
             return redirect(url_for('post', category=cat.ref, post=post.ref))
         except sqlite3.Error:
             db.session.rollback()  # откатываем все изменения
-            flash('Ошибка записи в базу данных', 'error')
+            flash('Ошибка записи в базу данных', 'Error')
     return render_template('add_post.html', form=form, categories=Categories.query.all())
 
 
@@ -120,5 +120,5 @@ def del_category(category):
         db.session.delete(cat_to_del)
         db.session.commit()
     else:
-        flash('Очистите категорию перед удалением!', 'Сообщение')
+        flash('Очистите категорию перед удалением!', 'Внимание')
     return redirect(url_for('.index'))
