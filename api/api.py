@@ -10,7 +10,7 @@ API для работы с сайтом.
 
 
 from flask import Blueprint
-from utils.sqlacchemy_models import db, Posts, Categories
+from models.models import db, Posts, Categories
 from flask_restful import reqparse, Api, Resource
 
 api_bp = Blueprint('api', __name__)
@@ -45,11 +45,13 @@ class CategoriesApi(Resource):
         parser.add_argument('ref', type=str)
         args = parser.parse_args()
         cat_to_del = Categories.query.filter_by(ref=args['ref']).first()
-        if Posts.query.filter_by(category_id=cat_to_del.id).first():
-            return {'error': 'The category have posts.'}, 405
-        db.session.delete(cat_to_del)
-        db.session.commit()
-        return '', 204
+        if cat_to_del:
+            if Posts.query.filter_by(category_id=cat_to_del.id).first():
+                return {'error': 'The category have posts.'}, 405
+            db.session.delete(cat_to_del)
+            db.session.commit()
+            return '', 204
+        return {'error': 'The category does not exist.'}, 405
 
 
 class CategoryApi(Resource):

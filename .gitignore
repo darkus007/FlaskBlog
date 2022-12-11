@@ -9,3 +9,4 @@ check.py
 setenv.sh
 *.log
 *.db
+.pytest_cache

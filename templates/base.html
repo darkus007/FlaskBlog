@@ -13,8 +13,8 @@
         <ul>
           {% if session['admin_logged'] == 1 %}
           <li><a class="current" href="{{ url_for('admin.index') }}"><span>ADMIN</span></a></li>
-          <li><a href="{{ url_for('add_category') }}"><span>ADD CATEGORY</span></a></li>
-          <li><a href="{{ url_for('add_post') }}"><span>ADD POST</span></a></li>
+          <li><a href="{{ url_for('admin.add_category') }}"><span>ADD CATEGORY</span></a></li>
+          <li><a href="{{ url_for('admin.add_post') }}"><span>ADD POST</span></a></li>
           <li><a href="{{ url_for('admin.logout') }}"><span>SIGN OUT</span></a></li>
           {% else %}
           <li><a href="{{ url_for('admin.login') }}"><span>SIGN IN</span></a></li>

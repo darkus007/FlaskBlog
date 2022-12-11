@@ -10,8 +10,8 @@ from functools import wraps
 from flask import Blueprint, request, redirect, render_template, url_for, flash, session
 import markdown
 
-from utils.wt_forms import LoginForm, CategoryForm, PostForm
-from utils.sqlacchemy_models import db, Posts, Categories
+from forms.wt_forms import LoginForm, CategoryForm, PostForm
+from models.models import db, Posts, Categories
 
 LOGIN = 'admin'
 PASSWORD = getenv('ADMIN_PASS')
@@ -33,7 +33,7 @@ def login_required(func):
     def wrapper(*args, **kwargs):
         if session.get('admin_logged'):
             return func(*args, **kwargs)
-        return redirect(url_for('.login'))
+        return redirect(url_for('.login'))      # status code 302
     return wrapper
 
 
@@ -56,7 +56,7 @@ def login():
             login_admin()
             return redirect(url_for('.index'))  # так указываем index из текущего модуля, без точки будет из приложения
         else:
-            flash('Неправильный логин или пароль', 'Error')
+            flash('Неправильный логин или пароль.', 'Error')
     return render_template('admin/login.html', form=form, categories=Categories.query.all())
 
 
@@ -79,7 +79,7 @@ def add_category():
             return redirect(url_for('category'))
         except sqlite3.Error:
             db.session.rollback()  # откатываем все изменения
-            flash('Ошибка записи в базу данных', 'Error')
+            flash('Ошибка записи в базу данных.', 'Error')
     return render_template('add_category.html', form=form, categories=Categories.query.all())
 
 
@@ -99,7 +99,7 @@ def add_post():
             return redirect(url_for('post', category=cat.ref, post=post.ref))
         except sqlite3.Error:
             db.session.rollback()  # откатываем все изменения
-            flash('Ошибка записи в базу данных', 'Error')
+            flash('Ошибка записи в базу данных.', 'Error')
     return render_template('add_post.html', form=form, categories=Categories.query.all())
 
 
