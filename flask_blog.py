@@ -1,6 +1,7 @@
 """
 Блог о web разработке на Flask.
 """
+import os.path
 from os import getenv
 
 from flask import Flask, render_template
@@ -8,7 +9,6 @@ from flask import Flask, render_template
 from models.models import db, Categories, Posts
 from admin.admin import admin
 from api.api import api_bp, api
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = getenv('SECRET_KEY')
@@ -46,8 +46,9 @@ def get_post(category, post):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
 
-    # создаем базу данных и таблицы в ней
-    # with app.app_context():
-    #     db.create_all()
+    if not os.path.exists('instance/database.db'):
+        with app.app_context():
+            db.create_all()  # создаем базу данных и таблицы в ней
+
+    app.run(debug=True, ssl_context='adhoc')  # ssl_context='adhoc' - для переключения на https
