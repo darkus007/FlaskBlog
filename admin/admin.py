@@ -6,8 +6,9 @@
 import sqlite3
 from os import getenv
 from functools import wraps
+from typing import Callable
 
-from flask import Blueprint, request, redirect, render_template, url_for, flash, session
+from flask import Blueprint, request, redirect, render_template, url_for, flash, session, Response
 import markdown
 
 from forms.wt_forms import LoginForm, CategoryForm, PostForm
@@ -28,7 +29,7 @@ def logout_admin():
     session.pop('admin_logged', None)
 
 
-def login_required(func):
+def login_required(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(*args, **kwargs):
         if session.get('admin_logged'):
@@ -39,7 +40,7 @@ def login_required(func):
 
 @admin.route('/')
 @login_required
-def index():
+def index() -> str:
     form = LoginForm()
     categories = Categories.query.all()
     posts = Posts.query.all()
@@ -47,7 +48,7 @@ def index():
 
 
 @admin.route('/login', methods=['POST', 'GET'])
-def login():
+def login() -> Response | str:
     form = LoginForm()
     if form.validate_on_submit():
         name = form.name.data
@@ -61,7 +62,7 @@ def login():
 
 
 @admin.route('/logout', methods=['POST', 'GET'])
-def logout():
+def logout() -> Response:
     if session.get('admin_logged'):
         logout_admin()
     return redirect(url_for('.login'))
@@ -69,7 +70,7 @@ def logout():
 
 @admin.route('/add-category', methods=['POST', 'GET'])
 @login_required
-def add_category():
+def add_category() -> Response | str:
     form = CategoryForm()
     if form.validate_on_submit():
         category = Categories(title=form.title.data, ref=form.ref.data)
@@ -85,7 +86,7 @@ def add_category():
 
 @admin.route('/add-post', methods=['POST', 'GET'])
 @login_required
-def add_post():
+def add_post() -> Response | str:
     form = PostForm()
     if form.validate_on_submit():
         cat = Categories.query.get(int(request.form['cat']))
@@ -105,7 +106,7 @@ def add_post():
 
 @admin.route('del-post/<path:post>')
 @login_required
-def del_post(post):
+def del_post(post) -> Response:
     post_to_del = Posts.query.filter_by(ref=post).first()
     db.session.delete(post_to_del)
     db.session.commit()
@@ -114,7 +115,7 @@ def del_post(post):
 
 @admin.route('del-category/<path:category>')
 @login_required
-def del_category(category):
+def del_category(category) -> Response:
     cat_to_del = Categories.query.filter_by(ref=category).first()
     if Posts.query.filter_by(category_id=cat_to_del.id).first() is None:
         db.session.delete(cat_to_del)

@@ -28,9 +28,10 @@ app.register_blueprint(api_bp, url_prefix='/api')
     # categories = Categories.query.all()
     # return render_template('base.html', categories=categories)
 
+
 @app.route('/')
 @app.route('/<path:category>')
-def get_category(category=None):
+def get_category(category=None) -> str:
     cat = Categories.query.filter_by(ref=category).first()
     if cat is None:
         cat = Categories.query.get(1)
@@ -39,7 +40,7 @@ def get_category(category=None):
 
 
 @app.route('/<path:category>/<path:post>')
-def get_post(category, post):
+def get_post(category: str, post: str) -> str:
     cat = Categories.query.filter_by(ref=category).first()
     posts = Posts.query.filter_by(category_id=cat.id).all()
     return render_template('post.html', posts=posts, current_post=post, cat=cat, categories=Categories.query.all())
