@@ -7,18 +7,19 @@
 	{% endfor %}
 	<form action="" method="post" class="form-contact">
 
-		<select name="cat">
-			<option value="0">Категория не выбрана</option>
+		<p>Категория: <select name="cat">
+			<option value="0">Не выбрана</option>
 		{% for cat in categories %}
 			<option value="{{ cat.id }}">{{ cat.title }}</option>
 		{% endfor %}
-		</select>
+		</select></p><br>
 
 		{{ form.hidden_tag() }}
-	    <p>{{ form.title.label() }} {{ form.title() }}</p>
-		<p>{{ form.ref.label() }} {{ form.ref() }}</p>
-		<p>{{ form.text.label() }} {{ form.text() }}</p>
-		<p>{{ form.submit() }}</p>
+	    <div>{{ form.title.label() }} {{ form.title(class_='input-fields') }}</div>
+		<div>{{ form.ref.label() }} {{ form.ref(class_='input-fields') }}</div>
+		<div>{{ form.text.label() }} {{ form.text(class_='input-area') }}</div>
+		<br>
+		<div>{{ form.submit(class_='button') }}</div>
 
 	</form>
 {% endblock %}

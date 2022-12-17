@@ -7,8 +7,8 @@
 	{% endfor %}
 	<form action="" method="post" class="form-contact">
 		{{ form.hidden_tag() }}
-	    <p>{{ form.name.label() }} {{ form.name() }}</p>
-		<p>{{ form.psw.label() }} {{ form.psw() }}</p>
-		<p>{{ form.submit() }}</p>
+	    <div>{{ form.name.label() }} {{ form.name(class_='input-fields') }}</div>
+		<div>{{ form.psw.label() }} {{ form.psw(class_='input-fields') }}</div>
+		<div>{{ form.submit(class_='button') }}</div>
 	</form>
 {% endblock %}
