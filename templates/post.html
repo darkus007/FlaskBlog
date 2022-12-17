@@ -5,6 +5,9 @@
         {% if post.ref == current_post %}
             <h3>{{ post.title }}</h3>
             <p>{{ post.text|safe }}</p>
+            <div id="footer">
+              <div class="right">Пост написан {{ post.date }}</div>
+            </div>
         {% endif %}
     {% endfor %}
 {% endblock %}

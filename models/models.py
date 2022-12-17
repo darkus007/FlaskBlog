@@ -23,10 +23,11 @@ class Categories(db.Model):
 
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(25), nullable=True)
-    ref = db.Column(db.String(25), nullable=True)
+    title = db.Column(db.String(25), unique=True)
+    ref = db.Column(db.String(25), unique=True)
     text = db.Column(db.Text)
-    date = db.Column(db.DateTime, default=datetime.utcnow())
+    date = db.Column(db.Text, default=datetime.utcnow().strftime('%d-%m-%Y'))
+    date_full = db.Column(db.DateTime, default=datetime.utcnow())
 
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 
@@ -37,6 +38,7 @@ class Posts(db.Model):
         res = {item.name: getattr(self, item.name) for item in self.__table__.columns
                if item.name not in ('date', 'category_id', 'category')}
         res.update({'date': str(self.date)})
+        res.update({'date_full': str(self.date_full)})
         return res
 
     def __repr__(self):

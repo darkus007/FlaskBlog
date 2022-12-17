@@ -48,10 +48,11 @@ class CategoriesApi(Resource):
         try:
             db.session.add(cat)
             db.session.commit()
+            cat = Categories.query.filter_by(ref=args["ref"]).first()
+            return cat.as_dict()
         except Exception:
             db.session.rollback()
-        cat = Categories.query.filter_by(ref=args["ref"]).first()
-        return cat.as_dict()
+        return {"error": "Error adding category."}, 400
 
     @login_required
     def delete(self):
@@ -125,8 +126,8 @@ class CategoryApi(Resource):
 class AuthApi(Resource):
     def get(self):
         if session.get('admin_logged', None) == 1:
-            return {'message': f'You logged as admin.'}, 200
-        return {'message': f'You are not authorized.'}, 200
+            return {'message': 'You logged as admin.'}, 200
+        return {'message': 'You are not authorized.'}, 200
 
     def post(self):
         parser = reqparse.RequestParser()

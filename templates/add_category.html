@@ -5,7 +5,7 @@
 	{% for cat, msg in get_flashed_messages(True) %}
 	<div>{{ cat }} : {{msg}}</div>
 	{% endfor %}
-	<form action="/add-category" method="post" class="form-contact">
+	<form action="" method="post" class="form-contact">
 		{{ form.hidden_tag() }}
 	    <p>{{ form.title.label() }} {{ form.title() }}</p>
 		<p>{{ form.ref.label() }} {{ form.ref() }}</p>

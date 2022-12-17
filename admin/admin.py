@@ -77,10 +77,13 @@ def add_category() -> Response | str:
         try:
             db.session.add(category)
             db.session.commit()
-            return redirect(url_for('category'))
+            return redirect(url_for('get_category'))
         except sqlite3.Error:
             db.session.rollback()  # откатываем все изменения
             flash('Ошибка записи в базу данных.', 'Error')
+        except Exception:
+            db.session.rollback()  # откатываем все изменения
+            flash('Ошибка записи в базу данных. Проверьте поле URL-slug, оно должно быть уникальным.', 'Error')
     return render_template('add_category.html', form=form, categories=Categories.query.all())
 
 
@@ -90,6 +93,10 @@ def add_post() -> Response | str:
     form = PostForm()
     if form.validate_on_submit():
         cat = Categories.query.get(int(request.form['cat']))
+        print(f"{request.form['cat']=}")
+        if request.form['cat'] == '0':
+            flash('Выберите категорию.', 'Error')
+            return render_template('add_post.html', form=form, categories=Categories.query.all())
         post = Posts(title=form.title.data,
                      ref=form.ref.data,
                      text=markdown.markdown(form.text.data),
@@ -97,10 +104,13 @@ def add_post() -> Response | str:
         try:
             db.session.add(post)
             db.session.commit()
-            return redirect(url_for('post', category=cat.ref, post=post.ref))
+            return redirect(url_for('get_post', category=cat.ref, post=post.ref))
         except sqlite3.Error:
             db.session.rollback()  # откатываем все изменения
             flash('Ошибка записи в базу данных.', 'Error')
+        except Exception:
+            db.session.rollback()  # откатываем все изменения
+            flash('Ошибка записи в базу данных. Проверьте поле URL-slug, оно должно быть уникальным.', 'Error')
     return render_template('add_post.html', form=form, categories=Categories.query.all())
 
 
