@@ -1,0 +1,17 @@
+.idea
+.DS_Store
+__pycache__
+*.log
+*.db
+*.md
+
+.pytest_cache
+
+venv
+setenv.sh
+
+Dockerfile
+
+tests
+temp
+instance
