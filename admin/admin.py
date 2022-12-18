@@ -4,7 +4,6 @@
 Реализован функционал добавления и удаление категории, статьи.
 """
 import sqlite3
-from os import getenv
 from functools import wraps
 from typing import Callable
 
@@ -13,9 +12,7 @@ import markdown
 
 from forms.wt_forms import LoginForm, CategoryForm, PostForm
 from models.models import db, Posts, Categories
-
-LOGIN = 'admin'
-PASSWORD = getenv('ADMIN_PASS')
+from config import LOGIN, PASSWORD
 
 
 admin = Blueprint('admin', __name__, template_folder='templates')

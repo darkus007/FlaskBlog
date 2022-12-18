@@ -1,17 +1,19 @@
 """
 Блог о web разработке на Flask.
 """
+
 import os.path
-from os import getenv
 
 from flask import Flask, render_template, redirect, url_for, Response
 
 from models.models import db, Categories, Posts
 from admin.admin import admin
 from api.api import api_bp, api
+from config import SECRET_KEY
+
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = getenv('SECRET_KEY')
+app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

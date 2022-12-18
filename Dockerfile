@@ -8,8 +8,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . ./
 
-ENV SECRET_KEY="your_app_secret_key"
-ENV ADMIN_PASS=your_secter_admin_password
+ENV SECRET_KEY="ваш_сложный_секретный_ключ"
+ENV ADMIN_PASS="ваш_сложный_пароль_администратора"
 
 EXPOSE 5000
 

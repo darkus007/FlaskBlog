@@ -7,13 +7,14 @@ API для работы с сайтом.
     - чтение всех постов в выбранной категории; добавление и удаление поста.
 
 """
-from os import getenv
+
 from functools import wraps
 from typing import Callable
 
 from flask import Blueprint, session
 from models.models import db, Posts, Categories
 from flask_restful import reqparse, Api, Resource
+from config import LOGIN, PASSWORD
 
 api_bp = Blueprint('api', __name__)
 
@@ -134,7 +135,7 @@ class AuthApi(Resource):
         parser.add_argument('name', type=str)
         parser.add_argument('psw', type=str)
         args = parser.parse_args()
-        if args['name'] == 'admin' and args['psw'] == getenv('ADMIN_PASS'):
+        if args['name'] == LOGIN and args['psw'] == PASSWORD:
             session['admin_logged'] = 1
             return {'message': f'User {args["name"]} is authorized.'}
         return {"error": f"Wrong login or password."}, 400
